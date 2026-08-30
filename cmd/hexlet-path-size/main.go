@@ -16,6 +16,11 @@ func main() {
 		Usage: "анализатор размера диска",
 		Flags: []cli.Flag{
 			&cli.BoolFlag{
+				Name:    "all",
+				Aliases: []string{"a"},
+				Usage:   "include hidden files and directories",
+			},
+			&cli.BoolFlag{
 				Name:    "human",
 				Aliases: []string{"H"},
 				Usage:   "human-readable sizes (auto-select unit)",
@@ -24,7 +29,8 @@ func main() {
 		Action: func(ctx context.Context, cmd *cli.Command) error {
 			path := cmd.Args().First()
 			human := cmd.Bool("human")
-			result, err := code.GetPathSize(path, human)
+			all := cmd.Bool("all")
+			result, err := code.GetPathSize(path, human, all)
 			if err != nil {
 				return cli.Exit(err.Error(), 1)
 			}

@@ -3,9 +3,10 @@ package code
 import (
 	"fmt"
 	"os"
+	"strings"
 )
 
-func GetPathSize(path string, human bool) (string, error) {
+func GetPathSize(path string, human bool, all bool) (string, error) {
 	info, err := os.Lstat(path)
 	if err != nil {
 		return "", err
@@ -17,6 +18,9 @@ func GetPathSize(path string, human bool) (string, error) {
 		}
 		var total int64
 		for _, entry := range entries {
+			if !all && strings.HasPrefix(entry.Name(), ".") {
+				continue
+			}
 			entryInfo, err := entry.Info()
 			if err != nil {
 				return "", err
@@ -31,7 +35,7 @@ func GetPathSize(path string, human bool) (string, error) {
 }
 
 func formatSize(size int64, human bool) string {
-	if human == false {
+	if !human {
 		return fmt.Sprintf("%dB", size)
 	}
 	units := []string{"B", "KB", "MB", "GB", "TB", "PB", "EB"}
