@@ -1,6 +1,7 @@
 package main
 
 import (
+	"code"
 	"context"
 	"fmt"
 	"log"
@@ -15,7 +16,7 @@ func main() {
 		Usage: "анализатор размера диска",
 		Action: func(ctx context.Context, cmd *cli.Command) error {
 			path := cmd.Args().First()
-			result, err := GetPathSize(path)
+			result, err := code.GetPathSize(path)
 			if err != nil {
 				return cli.Exit(err.Error(), 1)
 			}
@@ -26,31 +27,5 @@ func main() {
 
 	if err := cmd.Run(context.Background(), os.Args); err != nil {
 		log.Fatal(err)
-	}
-}
-
-func GetPathSize(path string) (string, error) {
-	info, err := os.Lstat(path)
-	if err != nil {
-		return "", err
-	}
-	if info.IsDir() {
-		entries, err := os.ReadDir(path)
-		if err != nil {
-			return "", err
-		}
-		var total int64
-		for _, entry := range entries {
-			entryInfo, err := entry.Info()
-			if err != nil {
-				return "", err
-			}
-			total += entryInfo.Size()
-		}
-		result := fmt.Sprintf("%dB", total)
-		return result, nil
-	} else {
-		result := fmt.Sprintf("%dB", info.Size())
-		return result, nil
 	}
 }

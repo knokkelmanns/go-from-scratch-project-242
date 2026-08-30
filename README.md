@@ -1,6 +1,7 @@
 # Анализатор размера диска (Go)
 
 [![hexlet-check](https://github.com/knokkelmanns/go-from-scratch-project-242/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/knokkelmanns/go-from-scratch-project-242/actions)
+[![tests](https://github.com/knokkelmanns/go-from-scratch-project-242/actions/workflows/tests.yml/badge.svg)](https://github.com/knokkelmanns/go-from-scratch-project-242/actions)
 
 Программа для анализа размера диска, которая позволяет получать информацию о занятом и свободном пространстве.
 
