@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-func GetPathSize(path string) (string, error) {
+func GetPathSize(path string, human bool) (string, error) {
 	info, err := os.Lstat(path)
 	if err != nil {
 		return "", err
@@ -23,9 +23,23 @@ func GetPathSize(path string) (string, error) {
 			}
 			total += entryInfo.Size()
 		}
-		result := fmt.Sprintf("%dB", total)
+		result := formatSize(total, human)
 		return result, nil
 	}
-	result := fmt.Sprintf("%dB", info.Size())
+	result := formatSize(info.Size(), human)
 	return result, nil
+}
+
+func formatSize(size int64, human bool) string {
+	if human == false {
+		return fmt.Sprintf("%dB", size)
+	}
+	units := []string{"B", "KB", "MB", "GB", "TB", "PB", "EB"}
+	unitIndex := 0
+	floatSize := float64(size)
+	for floatSize >= 1024 {
+		floatSize /= 1024
+		unitIndex += 1
+	}
+	return fmt.Sprintf("%.1f%s", floatSize, units[unitIndex])
 }

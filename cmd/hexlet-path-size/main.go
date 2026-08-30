@@ -14,9 +14,17 @@ func main() {
 	cmd := &cli.Command{
 		Name:  "hexlet-path-size",
 		Usage: "анализатор размера диска",
+		Flags: []cli.Flag{
+			&cli.BoolFlag{
+				Name:    "human",
+				Aliases: []string{"H"},
+				Usage:   "human-readable sizes (auto-select unit)",
+			},
+		},
 		Action: func(ctx context.Context, cmd *cli.Command) error {
 			path := cmd.Args().First()
-			result, err := code.GetPathSize(path)
+			human := cmd.Bool("human")
+			result, err := code.GetPathSize(path, human)
 			if err != nil {
 				return cli.Exit(err.Error(), 1)
 			}
