@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func GetPathSize(path string, human, all, recursive bool) (string, error) {
+func GetPathSize(path string, recursive, human, all bool) (string, error) {
 	size, err := getSizeBytes(path, all, recursive)
 	if err != nil {
 		return "", err
@@ -30,19 +30,21 @@ func getSizeBytes(path string, all, recursive bool) (int64, error) {
 			if !all && strings.HasPrefix(entry.Name(), ".") {
 				continue
 			}
-			if entry.IsDir() && recursive {
-				subtotal, err := getSizeBytes(filepath.Join(path, entry.Name()), all, recursive)
-				if err != nil {
-					return 0, err
+			if entry.IsDir() {
+				if recursive {
+					subtotal, err := getSizeBytes(filepath.Join(path, entry.Name()), all, recursive)
+					if err != nil {
+						return 0, err
+					}
+					total += subtotal
 				}
-				total += subtotal
-			} else {
-				entryInfo, err := entry.Info()
-				if err != nil {
-					return 0, err
-				}
-				total += entryInfo.Size()
+				continue
 			}
+			entryInfo, err := entry.Info()
+			if err != nil {
+				return 0, err
+			}
+			total += entryInfo.Size()
 		}
 		return total, nil
 	}
@@ -50,7 +52,7 @@ func getSizeBytes(path string, all, recursive bool) (int64, error) {
 }
 
 func formatSize(size int64, human bool) string {
-	if !human {
+	if !human || size < 1024 {
 		return fmt.Sprintf("%dB", size)
 	}
 	units := []string{"B", "KB", "MB", "GB", "TB", "PB", "EB"}

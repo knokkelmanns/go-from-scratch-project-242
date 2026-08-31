@@ -18,6 +18,9 @@ jobs:
         with:
           go-version-file: go.mod
 
+      - name: Lint
+        uses: golangci/golangci-lint-action@v7
+
       - name: Build
         run: make build
 
