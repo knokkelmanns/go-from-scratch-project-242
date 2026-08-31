@@ -33,7 +33,7 @@ make build
 ./bin/hexlet-path-size -H -a -r project/
 ```
 
-[![asciicast](https://asciinema.org/a/vNtQznVmHpumk4XM.svg)](https://asciinema.org/a/vNtQznVmHpumk4XM)
+[![asciicast](https://asciinema.org/a/WdLE8rCpewjYtcjC.svg)](https://asciinema.org/a/WdLE8rCpewjYtcjC)
 
 ---
 
