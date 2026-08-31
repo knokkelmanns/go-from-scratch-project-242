@@ -25,12 +25,18 @@ func main() {
 				Aliases: []string{"H"},
 				Usage:   "human-readable sizes (auto-select unit)",
 			},
+			&cli.BoolFlag{
+				Name:    "recursive",
+				Aliases: []string{"r"},
+				Usage:   "recursive size of directories",
+			},
 		},
 		Action: func(ctx context.Context, cmd *cli.Command) error {
 			path := cmd.Args().First()
 			human := cmd.Bool("human")
+			recursive := cmd.Bool("recursive")
 			all := cmd.Bool("all")
-			result, err := code.GetPathSize(path, human, all)
+			result, err := code.GetPathSize(path, human, all, recursive)
 			if err != nil {
 				return cli.Exit(err.Error(), 1)
 			}

@@ -23,7 +23,17 @@ cd go-from-scratch-project-242
 
 ## Использование
 
-<!-- Добавьте примеры запуска и запись asciinema — именно это смотрит работодатель -->
+```bash
+make install
+make build
+./bin/hexlet-path-size -h
+
+./bin/hexlet-path-size -H project/
+./bin/hexlet-path-size -H -a project/
+./bin/hexlet-path-size -H -a -r project/
+```
+
+[![asciicast](https://asciinema.org/a/yQkccASEUayxFZzi.svg)](https://asciinema.org/a/yQkccASEUayxFZzi)
 
 ---
 

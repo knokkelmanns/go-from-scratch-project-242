@@ -3,35 +3,50 @@ package code
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
-func GetPathSize(path string, human bool, all bool) (string, error) {
-	info, err := os.Lstat(path)
+func GetPathSize(path string, human, all, recursive bool) (string, error) {
+	size, err := getSizeBytes(path, all, recursive)
 	if err != nil {
 		return "", err
+	}
+	return formatSize(size, human), nil
+}
+
+func getSizeBytes(path string, all, recursive bool) (int64, error) {
+	info, err := os.Lstat(path)
+	if err != nil {
+		return 0, err
 	}
 	if info.IsDir() {
 		entries, err := os.ReadDir(path)
 		if err != nil {
-			return "", err
+			return 0, err
 		}
 		var total int64
 		for _, entry := range entries {
 			if !all && strings.HasPrefix(entry.Name(), ".") {
 				continue
 			}
-			entryInfo, err := entry.Info()
-			if err != nil {
-				return "", err
+			if entry.IsDir() && recursive {
+				subtotal, err := getSizeBytes(filepath.Join(path, entry.Name()), all, recursive)
+				if err != nil {
+					return 0, err
+				}
+				total += subtotal
+			} else {
+				entryInfo, err := entry.Info()
+				if err != nil {
+					return 0, err
+				}
+				total += entryInfo.Size()
 			}
-			total += entryInfo.Size()
 		}
-		result := formatSize(total, human)
-		return result, nil
+		return total, nil
 	}
-	result := formatSize(info.Size(), human)
-	return result, nil
+	return info.Size(), nil
 }
 
 func formatSize(size int64, human bool) string {
